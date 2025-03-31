@@ -34,9 +34,7 @@ class RoleMiddleware
 
         $role = $user->role;
 
-        Log::info("{$role}");
-        Log::info($roles);
-
+  
 
 
         if (in_array($role, $roles)) {

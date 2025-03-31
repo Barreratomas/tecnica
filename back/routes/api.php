@@ -28,7 +28,11 @@ Route::middleware([ RoleMiddleware::class . ':admin,user'])->group(function () {
     Route::delete('/reservations/{id}', [ReservationController::class, 'cancel']); // Cancelar reserva
 
     // Rutas exclusivas para administradores
-    Route::middleware([AdminMiddleware::class. 'admin'])->group(function () {
+    Route::middleware([ RoleMiddleware::class . ':admin'])->group(function () {
+        Route::post('/spaces', [SpaceController::class, 'store']); // crear espacios
+        Route::put('/spaces/{id}', [SpaceController::class, 'update']); // editar espacion
+        Route::delete('/spaces/{id}', [SpaceController::class, 'destroy']); // eliminar espacios
+
         Route::get('/admin/reservations', [ReservationController::class, 'listAll']); // Listar todas las reservas
         Route::put('/admin/reservations/{id}/approve', [ReservationController::class, 'approve']); // Aprobar reserva
         Route::put('/admin/reservations/{id}/reject', [ReservationController::class, 'reject']); // Rechazar reserva
