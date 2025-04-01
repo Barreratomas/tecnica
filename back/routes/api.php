@@ -13,7 +13,7 @@ Route::post('/register', [AuthController::class, 'register']); // Registro de us
 
 
 Route::middleware([ RoleMiddleware::class . ':admin,user'])->group(function () { 
-    Route::post('/logout', [AuthController::class, 'logout']);  
+    Route::post('/logout', [AuthController::class, 'logout']);  // Cerrar sesióm
 
 
 
@@ -29,13 +29,15 @@ Route::middleware([ RoleMiddleware::class . ':admin,user'])->group(function () {
 
     // Rutas exclusivas para administradores
     Route::middleware([ RoleMiddleware::class . ':admin'])->group(function () {
-        Route::post('/spaces', [SpaceController::class, 'store']); // crear espacios
-        Route::put('/spaces/{id}', [SpaceController::class, 'update']); // editar espacion
-        Route::delete('/spaces/{id}', [SpaceController::class, 'destroy']); // eliminar espacios
+        Route::post('/spaces', [SpaceController::class, 'store']); // Crear espacios
+        Route::put('/spaces/{id}', [SpaceController::class, 'update']); // Editar espacion
+        Route::delete('/spaces/{id}', [SpaceController::class, 'destroy']); // Eliminar espacios
 
         Route::get('/admin/reservations', [ReservationController::class, 'listAll']); // Listar todas las reservas
         Route::put('/admin/reservations/{id}/approve', [ReservationController::class, 'approve']); // Aprobar reserva
         Route::put('/admin/reservations/{id}/reject', [ReservationController::class, 'reject']); // Rechazar reserva
+        Route::delete('/admin/reservations/{id}/delete', [ReservationController::class, 'eliminar']); // Eliminar reserva
+
     });
 
 });

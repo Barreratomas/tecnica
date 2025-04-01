@@ -1,0 +1,58 @@
+.filtro-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+  }
+  
+  .filtro-form {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    max-width: 500px;
+  }
+  
+  .filtro-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+  
+  .filtro-input:focus {
+    border-color: #007bff;
+  }
+  
+  .filtro-btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .filtro-btn-buscar {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .filtro-btn-buscar:hover {
+    background-color: #0056b3;
+  }
+  
+  .filtro-btn-limpiar {
+    background-color: #f0f0f0;
+    color: #333;
+  }
+  
+  .filtro-btn-limpiar:hover {
+    background-color: #d6d6d6;
+  }
+  

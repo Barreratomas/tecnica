@@ -39,4 +39,7 @@ class RegisterRequest extends FormRequest
             'password.min' => 'La contraseña debe tener al menos 6 caracteres',
         ];
     }
+
+
+    
 }

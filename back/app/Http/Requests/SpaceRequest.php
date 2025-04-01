@@ -47,7 +47,7 @@ class SpaceRequest extends FormRequest
     }
 
     /**
-     * Maneja los errores de validación y devuelve una respuesta en JSON.
+     * Maneja los errores de validación y devuelve una respuesta en JSON
      */
     protected function failedValidation(Validator $validator)
     {

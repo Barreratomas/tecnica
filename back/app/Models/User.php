@@ -11,15 +11,11 @@ class User extends Model
 
  
     protected $fillable = [
-        'username',
-        'email',
-        'password',
-        'token',
-        'role'
+        'username','email','password','token','role'
     ];
 
     protected $hidden = [
-        'password',
+        'password','id','updated_at','created_at'
     ];
 
     public function reservations()

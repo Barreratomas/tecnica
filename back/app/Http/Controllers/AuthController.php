@@ -13,12 +13,11 @@ class AuthController extends Controller
 {
     public function register(RegisterRequest $request)
     {
-        Log::info("asdda");
         User::create([
             'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 'admin'
+            'role' => 'user'
         ]);
 
         return response()->json(['message' => 'Usuario registrado correctamente'], 201);
@@ -26,6 +25,7 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
+
         $user = User::where('email', $request->email)->first();
     
         if (!$user || !Hash::check($request->password, $user->password)) {
@@ -35,7 +35,9 @@ class AuthController extends Controller
         $token = $this->generateToken($user->username, $user->email);
         $user->update(['token' => $token]);
     
-        return response()->json(['token' => $token]);
+        return response()->json([
+            'user' => $user
+        ],200);
     }
     
 
@@ -60,7 +62,7 @@ class AuthController extends Controller
 
 
 
-    $user = User::where('token', $token)->first();
+    $user = $this->getUserByToken($token);;
 
     if (!$user) {
         return response()->json(['message' => 'usuario no encontrado'], 401);
