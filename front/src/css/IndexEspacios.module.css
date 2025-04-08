@@ -24,15 +24,20 @@
   }
   
   .button {
-    padding: 0.75rem 1.5rem;
+    padding: 0.75rem 1rem;
+    width: 90%; 
+    max-width: 200px; 
     border: none;
     border-radius: 6px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
-    display: flex;
+    display: inline-flex;
+    justify-content: center; 
     align-items: center;
     gap: 0.5rem;
+    white-space: nowrap;
+    box-sizing: border-box; 
   }
   
   .buttonPrimary {
@@ -60,6 +65,14 @@
   
   .buttonSuccess:hover {
     background-color: #27ae60;
+  }
+  .buttonWarning {
+    background-color: #f39c12;
+    color: white;
+  }
+  
+  .buttonWarning:hover {
+    background-color: #d35400;
   }
   
   .message {

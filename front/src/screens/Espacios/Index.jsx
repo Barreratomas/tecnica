@@ -6,6 +6,7 @@ import ActualizarEspacio from "./ActualizarEspacio";
 import FiltroEspacios from "./FiltroEspacio";
 import DataTable from 'react-data-table-component';
 import styles from '../../css/IndexEspacios.module.css';
+import Table from "../../hooks/tabla";
 
 const IndexEspacios = () => {
   const { getEspacios, deleteEspacio } = useEspacioService();
@@ -25,12 +26,15 @@ const IndexEspacios = () => {
     fetchEspacios();
     const rol = localStorage.getItem('role');
     setUsuarioRol(rol);
+
+
   }, [pagination.currentPage, searchTerm]);
 
   const fetchEspacios = async () => {
     setLoading(true);
     try {
       const data = await getEspacios(searchTerm, pagination.currentPage, pagination.perPage);
+
       setEspacios(data.spaces);
       setPagination(prev => ({
         ...prev,
@@ -50,6 +54,11 @@ const IndexEspacios = () => {
     setSelectedEspacioName(name);
     setIsModalOpen(true);
   };
+
+  const handleUpdate = (id) => {
+    setSelectedEspacioId(id);
+    setIsUpdateModalOpen(true);
+  }
 
   const handleDelete = async (id) => {
     if (window.confirm("¿Estás seguro de que quieres eliminar este espacio?")) {
@@ -72,65 +81,12 @@ const IndexEspacios = () => {
     setPagination(prev => ({ ...prev, currentPage: 1 })); 
   };
   
-  const columns = [
-    {
-      name: 'Nombre',
-      selector: (row) => row.name,
-      sortable: true,
-    },
-    {
-      name: 'Descripción',
-      selector: (row) => row.description,
-      sortable: true,
-    },
-    {
-      name: 'Capacidad',
-      selector: (row) => row.capacity,
-      sortable: true,
-    },
-    {
-      name: 'Disponible',
-      selector: (row) => (row.available === 1 ? "Sí" : "No"),
-      sortable: true,
-    },
-    {
-      name: 'Acciones',
-      cell: (row) => (
-        <div className={styles.actionButtons}>
-          {usuarioRol === "admin" && (
-            <>
-              <button 
-                className={`${styles.button} ${styles.buttonPrimary}`}
-                onClick={() => {
-                  setSelectedEspacioId(row.id);
-                  setIsUpdateModalOpen(true);
-                }}
-              >
-                Actualizar
-              </button>
-              <button 
-                className={`${styles.button} ${styles.buttonDanger}`}
-                onClick={() => handleDelete(row.id)}
-              >
-                Eliminar
-              </button>
-            </>
-          )}
-          {row.available === 1 && (
-            <button 
-              className={`${styles.button} ${styles.buttonSuccess}`}
-              onClick={() => handleReserva(row.id, row.name)}
-            >
-              Reservar
-            </button>
-          )}
-        </div>
-      ),
-    },
-  ];
+
 
   return (
+    
     <div className={styles.container}>
+
       <div className={styles.header}>
         <h1 className={styles.title}>Espacios Disponibles</h1>
         {usuarioRol === "admin" && (
@@ -150,46 +106,22 @@ const IndexEspacios = () => {
       {loading ? (
         <div className={styles.loading}>Cargando...</div>
       ) : (
+        
         <div className={styles.tableContainer}>
-          <DataTable
-            key={`espacios-table-${searchTerm}-${pagination.currentPage}`}
+            <Table 
+            rol={usuarioRol}
+            pagination={pagination}
+            campos={["name", "description","capacity","available","actions"]} 
+            data={espacios} 
+            handlePageChange={()=>handlePageChange}
+            acciones={[
+              {name:"actualizar",action:handleUpdate},
+              {name:"eliminar",action:handleDelete},
+              {name:"reservar",action:handleReserva}
+            ]}
+            ></Table>
 
-        columns={columns}
-        data={espacios}
-        pagination
-        paginationServer
-        paginationTotalRows={pagination.totalItems || 0}
-        paginationDefaultPage={pagination.currentPage} 
-        onChangePage={handlePageChange}
-        paginationPerPage={pagination.perPage}
-        highlightOnHover
-        responsive
-        noDataComponent="No hay espacios disponibles."
-            customStyles={{
-              headCells: {
-                style: {
-                  backgroundColor: '#f8f9fa',
-                  fontWeight: '600',
-                  fontSize: '1rem',
-                },
-              },
-              cells: {
-                style: {
-                  padding: '1rem',
-                },
-              },
-              rows: {
-                style: {
-                  '&:not(:last-of-type)': {
-                    borderBottom: '1px solid #eee',
-                  },
-                  '&:hover': {
-                    backgroundColor: '#f8f9fa',
-                  },
-                },
-              },
-            }}
-          />
+     
         </div>
       )}
 
