@@ -104,22 +104,22 @@ class ReservationController extends Controller
             $user = $this->getUser($token);
 
             $space = Space::find($request->space_id);
-            if (!$space || !$space->available) {
-                throw new \Exception('El espacio no está disponible o no existe');
+            if (!$space) {
+                throw new \Exception('El espacio no existe');
             }
 
+            // No permite reservar el mismo espacio en el mismo rango de fechas de un registro aprobado
             $overlapping = Reservation::where('space_id', $request->space_id)
-                ->where('status', 'approved')
-                ->where('end_time', '>', now())
-                ->where(function($query) use ($request) {
-                    $query->whereBetween('start_time', [$request->start_time, $request->end_time])
-                          ->orWhereBetween('end_time', [$request->start_time, $request->end_time])
-                          ->orWhere(function($q) use ($request) {
-                              $q->where('start_time', '<', $request->start_time)
-                                ->where('end_time', '>', $request->end_time);
-                          });
-                })
-                ->exists();
+            ->where('status', 'approved')
+            ->where(function ($query) use ($request) {
+                $query->whereBetween('start_time', [$request->start_time, $request->end_time])
+                      ->orWhereBetween('end_time', [$request->start_time, $request->end_time])
+                      ->orWhere(function ($q) use ($request) {
+                          $q->where('start_time', '<', $request->start_time)
+                            ->where('end_time', '>', $request->end_time);
+                      });
+            })
+            ->exists();
 
             if ($overlapping) {
                 throw new \Exception('El espacio ya está reservado en este rango de fechas');
