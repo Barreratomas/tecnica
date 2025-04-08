@@ -18,10 +18,9 @@ function Table({ rol,pagination,handlePageChange, campos = [], data = [], accion
                   return null;
                 }
                 if (accion.name.toLowerCase() === "cancelar" && row.id_user_reserva !== row.id_user) {
-                  console.log("aeaaaaaaaa")
                   return null;
                 }
-                if (row.status !== "pending") {
+                if (row.status && row.status !== "pending") {
                   return null;
 
                 }
