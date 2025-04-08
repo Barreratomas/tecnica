@@ -35,14 +35,16 @@ const IndexReservas = () => {
 
       const formattedReservations = data.reservations.map((reserva) => {
         const start = new Date(reserva.start_time);
-       
         const end = new Date(reserva.end_time);
-       
-        return{
-          id:reserva.id,
-          space:reserva.space.name,
-          start_time: start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          end_time: end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      
+        const optionsDate = { day: '2-digit', month: '2-digit', year: 'numeric' };
+        const optionsTime = { hour: '2-digit', minute: '2-digit' };
+      
+        return {
+          id: reserva.id,
+          space: reserva.space.name,
+          start_time: `${start.toLocaleDateString([], optionsDate)} ${start.toLocaleTimeString([], optionsTime)}`,
+          end_time: `${end.toLocaleDateString([], optionsDate)} ${end.toLocaleTimeString([], optionsTime)}`,
           status: reserva.status,
           user: reserva.user?.username || "Yo",
           id_user_reserva:reserva.user_id,

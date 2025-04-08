@@ -109,6 +109,7 @@ class ReservationController extends Controller
             }
 
             $overlapping = Reservation::where('space_id', $request->space_id)
+                ->where('status', 'approved')
                 ->where('end_time', '>', now())
                 ->where(function($query) use ($request) {
                     $query->whereBetween('start_time', [$request->start_time, $request->end_time])
@@ -215,6 +216,21 @@ class ReservationController extends Controller
             $reservation = Reservation::findOrFail($id);
             $reservation->update(['status' => 'approved']);
             $reservation->space()->update(['available' => false]);
+
+            // Rechazar reservas solapadas en el mismo espacio
+            Reservation::where('space_id', $reservation->space_id)
+            ->where('id', '!=', $reservation->id)
+            ->where('status', '=', 'pending')
+            ->where(function ($query) use ($reservation) {
+                $query->whereBetween('start_time', [$reservation->start_time, $reservation->end_time])
+                    ->orWhereBetween('end_time', [$reservation->start_time, $reservation->end_time])
+                    ->orWhere(function ($q) use ($reservation) {
+                        $q->where('start_time', '<=', $reservation->start_time)
+                            ->where('end_time', '>=', $reservation->end_time);
+                    });
+            })
+            ->update(['status' => 'rejected']);
+
 
             return response()->json([
                 'message' => 'Reserva aprobada exitosamente',

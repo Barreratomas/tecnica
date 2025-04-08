@@ -21,6 +21,10 @@ function Table({ rol,pagination,handlePageChange, campos = [], data = [], accion
                   console.log("aeaaaaaaaa")
                   return null;
                 }
+                if (row.status !== "pending") {
+                  return null;
+
+                }
                 return(
                     <button
                     className={
